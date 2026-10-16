@@ -121,9 +121,18 @@ export async function onRequest(context) {
   // Pobieranie APK info
   if (path === "/api/download/info") {
     return jsonResponse({
-      available: false,
-      lan: [],
+      available: true,
+      size: 5358205,
+      updated: Date.now(),
+      path: "/download/LangEduDei.apk",
+      lan: ["https://langedudei.pages.dev/download/LangEduDei.apk"],
     });
+  }
+
+  // Kod QR do pobrania APK
+  if (path === "/api/download/qr") {
+    const u = url.searchParams.get("u") || "https://langedudei.pages.dev/download/LangEduDei.apk";
+    return Response.redirect(`https://api.qrserver.com/v1/create-qr-code/?size=168x168&margin=4&data=${encodeURIComponent(u)}`, 302);
   }
 
   // Lektor neuronowy wymaga Node.js – przeglądarka automatycznie przełączy się na wbudowany Web Speech API
