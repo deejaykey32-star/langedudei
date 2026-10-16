@@ -1,0 +1,19 @@
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  // Darmowy lektor AI (Kurak) dla aplikacji LangEduDei: Cloudflare Workers + Workers AI.
+  "name": "langedudei-kurak",
+  "main": "index.js",
+  "compatibility_date": "2026-10-01",
+  "workers_dev": true,
+  "observability": { "enabled": true },
+  // Workers AI – darmowe modele (plan Free: 10 000 neuronów dziennie).
+  "ai": { "binding": "AI" },
+  // KV – pamięć filmów do lekcji i napisów YouTube (tworzona automatycznie przy wdrożeniu).
+  "kv_namespaces": [{ "binding": "YT" }],
+  // Limit: 20 zapytań do Kuraka na minutę z jednego adresu IP.
+  "ratelimits": [
+    { "name": "LIMITER", "namespace_id": "1001", "simple": { "limit": 20, "period": 60 } }
+  ]
+  // Sekret ustawiany poleceniem `wrangler secret put APP_TOKEN` (nie w tym pliku):
+  //   APP_TOKEN – token aplikacji LangEduDei
+}

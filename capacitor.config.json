@@ -1,0 +1,17 @@
+{
+  "appId": "pl.langedudei.app",
+  "appName": "LangEduDei",
+  "webDir": "mobile-www",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": false,
+    "backgroundColor": "#14161b"
+  },
+  "plugins": {
+    "CapacitorHttp": {
+      "enabled": false
+    }
+  }
+}

@@ -1,0 +1,15 @@
+node_modules/
+.env
+.tts-cache/
+.yt-cache/
+mobile-www/
+android/app/build/
+android/.gradle/
+android/keystore.properties
+*.keystore
+public/download/
+worker/.app-token
+.wrangler-dry/
+.wrangler/
+worker/.wrangler/
+.claude/
