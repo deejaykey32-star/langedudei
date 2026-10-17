@@ -3,6 +3,7 @@ import { getState, update, resetAll } from "../storage.js";
 import { englishVoices, speak, speakPl, sttAvailable } from "../speech.js";
 import { isNative, native } from "../backend.js";
 import { apkCard } from "../apkDownload.js";
+import { triggerWidgetSync } from "../widgetSync.js";
 
 export function render(root, ctx) {
   const st = getState().settings;
@@ -106,6 +107,23 @@ export function render(root, ctx) {
   root.append(
     sectionHeader("⚙️", "Lektor i ustawienia"),
     apkCard(),
+    isNative
+      ? h(
+          "div",
+          { class: "card" },
+          h("h2", {}, "📱 Widget Kuraka na pulpit Androida"),
+          h("p", { class: "muted" }, "Widget zajmuje połowę pulpitu telefonu i prezentuje Kuraka z trudnymi słowami i zdaniami (gdzie była zła odpowiedź w powtórkach)."),
+          h(
+            "ul",
+            {},
+            h("li", {}, "Przytrzymaj palec na wolnym miejscu ekranu telefonu i wybierz ", h("strong", {}, "Widgety"), "."),
+            h("li", {}, "Wybierz ", h("strong", {}, "LangEduDei → Kurak · Powtórka"), " i umieść na pulpicie (zajmuje 4×2 komórki)."),
+            h("li", {}, "Treść zmienia się co parę minut oraz przy naciśnięciu przycisku 🔁."),
+            h("li", {}, "Zawiera grafikę skojarzeniową i przycisk ", h("strong", {}, "Ćwicz z Kurakiem 🎯"), ", który natychmiast otwiera ćwiczenie utrwalające."),
+          ),
+          h("div", { class: "row" }, h("button", { class: "btn primary", onclick: () => { triggerWidgetSync(0); toast("Zsynchronizowano trudne treści z widgetem Kuraka!", "success"); } }, "🔄 Zsynchronizuj widget teraz")),
+        )
+      : null,
     h(
       "div",
       { class: "card form" },

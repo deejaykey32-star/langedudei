@@ -4,4 +4,6 @@
     <string name="title_activity_main">LangEduDei</string>
     <string name="package_name">pl.langedudei.app</string>
     <string name="custom_url_scheme">pl.langedudei.app</string>
+    <string name="widget_kurak_name">Kurak · Powtórka</string>
+    <string name="widget_kurak_description">Widget z trudnymi słowami i zdaniami do powtórki, maskotką Kurakiem i grafikami skojarzeniowymi.</string>
 </resources>

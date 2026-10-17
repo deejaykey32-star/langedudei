@@ -48,4 +48,14 @@ export const backend = {
     for (const q of queries) qs.append("q", q);
     return (await getJson(`/api/videos/slot?${qs}`)).videos;
   },
+  async syncWidget(items) {
+    if (isNative) return (await native()).syncWidget(items);
+  },
+  async getWidgetLaunchItem() {
+    if (isNative) return (await native()).getWidgetLaunchItem();
+    return null;
+  },
+  async refreshWidget() {
+    if (isNative) return (await native()).refreshWidget();
+  },
 };

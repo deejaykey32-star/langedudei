@@ -1,4 +1,6 @@
 // Postęp i ustawienia w localStorage (+ nagrania głosu w IndexedDB).
+import { triggerWidgetSync } from "./widgetSync.js";
+
 const KEY = "eu-trainer-v1";
 
 const DEFAULTS = {
@@ -56,6 +58,7 @@ export function today() {
 
 export function ensureStarted() {
   if (!state.startDate) update((s) => (s.startDate = today()));
+  triggerWidgetSync(1500);
 }
 
 export function currentWeek() {
@@ -99,9 +102,12 @@ export function srsGrade(wordId, correct) {
       card.box = Math.min(5, card.box + 1);
     } else {
       card.box = 1;
+      card.fails = (card.fails || 0) + 1;
+      card.lastFailed = Date.now();
     }
     card.due = Date.now() + INTERVALS[card.box] * 86400000;
   });
+  triggerWidgetSync();
 }
 
 export function srsDue(words) {

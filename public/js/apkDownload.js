@@ -38,6 +38,7 @@ export function apkCard({ compact = false } = {}) {
                 h("li", {}, "Otwórz pobrany plik. Android zapyta o zgodę na instalację z tego źródła – zezwól (Ustawienia → Instaluj nieznane aplikacje)."),
                 h("li", {}, "Zainstaluj i uruchom LangEduDei. Przy pierwszym ćwiczeniu mówienia zezwól na mikrofon."),
                 h("li", {}, "Rozmawiaj z Kurakiem (lektor AI) – działa od razu, za darmo, bez żadnych kluczy."),
+                h("li", {}, "Dodaj ", h("strong", {}, "Widget Kuraka"), " na pulpit (przytrzymaj palec na ekranie telefonu → Widgety → LangEduDei). Widget zajmuje połowę pulpitu, co parę minut rotuje trudne słowa i zdania z grafikami i pozwala od razu przejść do ćwiczeń!"),
                 phoneUrl ? h("li", { class: "muted small" }, "Adres do wpisania w telefonie: ", h("code", {}, phoneUrl)) : null,
               ),
             ),

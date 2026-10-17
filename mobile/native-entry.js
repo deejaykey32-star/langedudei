@@ -1,10 +1,35 @@
 // Natywna warstwa aplikacji LangEduDei na Androida (Capacitor) – zastępuje serwer Node.
 // Pakowana przez esbuild do js/native/bundle.js w katalogu mobile-www.
-import { CapacitorHttp } from "@capacitor/core";
+import { CapacitorHttp, registerPlugin } from "@capacitor/core";
 import { TextToSpeech } from "@capacitor-community/text-to-speech";
 import { SpeechRecognition } from "@capacitor-community/speech-recognition";
 import { createYouTube } from "../public/js/shared/ytCore.js";
 import { askKurak } from "../public/js/shared/cloud.js";
+
+const KurakWidget = registerPlugin("KurakWidget");
+
+export async function syncWidget(items) {
+  try {
+    await KurakWidget.syncDifficultItems({ items });
+  } catch (e) {
+    console.warn("syncWidget error:", e);
+  }
+}
+
+export async function getWidgetLaunchItem() {
+  try {
+    const res = await KurakWidget.getLaunchItem();
+    return res?.wordId || null;
+  } catch {
+    return null;
+  }
+}
+
+export async function refreshWidget() {
+  try {
+    await KurakWidget.refreshWidget();
+  } catch {}
+}
 
 // ---------- Lektor AI Kurak: darmowy model w chmurze (Cloudflare Workers AI), bez klucza w telefonie ----------
 const post = async (url, headers, body) => {

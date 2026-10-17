@@ -18,7 +18,30 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <!-- Deep link z widgetu Kuraka do ćwiczeń utrwalających -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="langedudei" />
+            </intent-filter>
         </activity>
+
+        <!-- Widget Kuraka na pulpit Androida (połowa ekranu, trudne słowa i zdania do powtórki) -->
+        <receiver
+            android:name=".widget.KurakWidgetProvider"
+            android:exported="true"
+            android:label="@string/widget_kurak_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="pl.langedudei.app.ACTION_WIDGET_ROTATE" />
+                <action android:name="pl.langedudei.app.ACTION_WIDGET_NEXT" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/kurak_widget_info" />
+        </receiver>
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -29,10 +52,11 @@
         </provider>
     </application>
 
-    <!-- Uprawnienia: internet (filmy, lektor AI), mikrofon (mówienie, shadowing, nagrania) -->
+    <!-- Uprawnienia: internet (filmy, lektor AI), mikrofon (mówienie, shadowing, nagrania), start po reboocie dla widgetu -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-feature android:name="android.hardware.microphone" android:required="false" />
 
     <!-- Android 11+: dostęp do usług rozpoznawania i syntezy mowy -->

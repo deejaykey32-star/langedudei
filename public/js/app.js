@@ -5,6 +5,7 @@ import { getState, update, currentWeek, ensureStarted, streak } from "./storage.
 import { weekPlan } from "./data/curriculum.js";
 import { stopSpeaking } from "./speech.js";
 import { api } from "./api.js";
+import { backend } from "./backend.js";
 
 import * as dashboard from "./sections/dashboard.js";
 import * as course from "./sections/course.js";
@@ -141,6 +142,19 @@ api.status().then((s) => {
   ctx.ai = Boolean(s.ai);
   ctx.keyConfigured = Boolean(s.keyConfigured);
 });
+
+// Obsługa kliknięcia w widget Androida Kuraka
+window.addEventListener("widget-practice", (e) => {
+  if (e.detail?.wordId) {
+    location.hash = `#/review?word=${encodeURIComponent(e.detail.wordId)}`;
+  }
+});
+backend.getWidgetLaunchItem().then((wordId) => {
+  if (wordId) {
+    location.hash = `#/review?word=${encodeURIComponent(wordId)}`;
+  }
+});
+
 route();
 
 // Eksport do debugowania

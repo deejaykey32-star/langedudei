@@ -2,6 +2,8 @@ import { h, sectionHeader, tipBox, speakBtn, speakPlBtn, shuffle, toast } from "
 import { wordsForLevel } from "../data/vocab.js";
 import { getState, srsDue, srsNew, srsGrade, logActivity } from "../storage.js";
 import { speak, listen, sttAvailable } from "../speech.js";
+import { findReviewItem } from "../widgetSync.js";
+import { guideSays } from "../avatar.js";
 
 export function poolForLevel(level) {
   const ai = Object.entries(getState().aiWords || {})
@@ -10,12 +12,20 @@ export function poolForLevel(level) {
   return [...wordsForLevel(level, { upTo: true }), ...ai];
 }
 
-export function render(root, ctx) {
+export function render(root, ctx, params = new URLSearchParams()) {
+  const focusWordId = params.get("word");
+  const focusItem = focusWordId ? findReviewItem(focusWordId) : null;
+
   const pool = poolForLevel(ctx.level);
   const themeWords = pool.filter((w) => w.theme === ctx.plan.vocabTheme);
   const due = srsDue(pool);
   const fresh = [...srsNew(themeWords), ...srsNew(pool)].filter((w, i, a) => a.indexOf(w) === i).slice(0, 8);
-  const queue = shuffle([...due.slice(0, 20), ...fresh]);
+  let queue = shuffle([...due.slice(0, 20), ...fresh]);
+
+  if (focusItem) {
+    queue = [focusItem, ...queue.filter((w) => w.id !== focusItem.id && w.en !== focusItem.en)];
+  }
+
   let i = 0;
   let good = 0;
   const box = h("div");
@@ -70,10 +80,16 @@ export function render(root, ctx) {
       h("button", { class: "btn bad-btn", onclick: () => (srsGrade(w.id, false), i++, next()) }, "❌ Nie pamiętałem"),
       h("button", { class: "btn good-btn", onclick: () => (srsGrade(w.id, true), good++, i++, next()) }, "✅ Pamiętałem"),
     );
+    const isWidgetCard = focusItem && (w.id === focusItem.id || w.en === focusItem.en);
+    const widgetPill = isWidgetCard
+      ? h("div", {}, h("span", { class: "pill", style: "background: #ef4444; color: #fff; font-weight: bold; margin-bottom: 8px; display: inline-block;" }, "🎯 Trudne słowo / zwrot z widgetu pulpitu"))
+      : null;
+
     box.replaceChildren(
       h(
         "div",
         { class: "card flashcard center" },
+        widgetPill,
         h("div", { class: "muted" }, `${i + 1} / ${queue.length} · ${getState().srs[w.id] ? "powtórka" : "nowe słowo"}`),
         h("div", { class: "flash-emoji" }, w.emoji),
         h("div", { class: "card-pl" }, w.pl, " ", speakPlBtn(w.pl)),
@@ -89,6 +105,18 @@ export function render(root, ctx) {
 
   root.append(
     sectionHeader("🧠", "Powtórki – pamiętaj więcej, zapominaj mniej", "Odc. „How to remember English better and forget less”: aktywne przypominanie + powtórki w odstępach."),
+  );
+
+  if (focusItem) {
+    root.append(
+      guideSays(
+        `I say, boy! To słowo lub zwrot z Twojego widgetu sprawiało Ci trudność: „${focusItem.en}”. Poćwiczmy je teraz, aby zapisać je na stałe w pamięci długotrwałej!`,
+        { mood: "talk", en: focusItem.en }
+      )
+    );
+  }
+
+  root.append(
     tipBox("Nie czytaj słówek w kółko. Zakryj odpowiedź, spróbuj sobie przypomnieć i powiedz na głos – ten wysiłek mówi mózgowi „to ważne”."),
     h("div", { class: "card row wrap" }, h("span", {}, `📥 Do powtórki: ${due.length}`), h("span", {}, `🆕 Nowe na dziś: ${fresh.length}`), h("span", { class: "muted" }, `Temat tygodnia: ${ctx.plan.vocabTheme}`)),
     box,
