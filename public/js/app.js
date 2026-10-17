@@ -117,6 +117,11 @@ async function route() {
 }
 
 document.getElementById("menu-btn").addEventListener("click", () => document.body.classList.toggle("nav-open"));
+main.addEventListener("click", () => {
+  if (document.body.classList.contains("nav-open")) {
+    document.body.classList.remove("nav-open");
+  }
+});
 window.addEventListener("hashchange", route);
 
 window.addEventListener("tts-missing", (e) =>

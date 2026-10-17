@@ -14,7 +14,9 @@ await fs.cp(path.join(root, "public"), out, { recursive: true, filter: (src) => 
 // Telefon: obszar pod paskiem stanu i zgoda na widok od krawędzi do krawędzi.
 const indexFile = path.join(out, "index.html");
 let html = await fs.readFile(indexFile, "utf8");
-html = html.replace('content="width=device-width, initial-scale=1"', 'content="width=device-width, initial-scale=1, viewport-fit=cover"');
+if (!html.includes("viewport-fit=cover")) {
+  html = html.replace(/content=["']width=device-width[^"']*["']/, 'content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover"');
+}
 html = html.replace("<body>", '<body class="native-app">');
 await fs.writeFile(indexFile, html);
 
