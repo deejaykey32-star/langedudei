@@ -800,3 +800,30 @@ Object.assign(RENDERERS, {
     };
   },
 });
+
+// =====================================================================
+// Wiele znaczeń: „Co znaczy to słowo w tym zdaniu?”
+// =====================================================================
+Object.assign(TYPE_LABELS, { meaning: "Które znaczenie?" });
+
+const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+Object.assign(RENDERERS, {
+  meaning(ex, api) {
+    const grid = choiceGrid(ex.options, (o, i) => h("span", {}, h("kbd", {}, i + 1), " ", o), api);
+    // Wyróżnij słowo (także odmienione: heads, headed, ran…) w zdaniu.
+    const stem = ex.word.split(" ")[0].replace(/[?!.]$/, "");
+    const re = new RegExp(`(${escapeRe(stem.length > 3 ? stem.slice(0, Math.max(3, stem.length - 1)) : stem)}\\w*)`, "i");
+    const parts = ex.en.split(re);
+    const sentence = h("div", { class: "ex-source meaning-sentence" }, speakBtn(ex.en), ...parts.map((p, i) => (i % 2 ? h("mark", {}, p) : p)));
+    return {
+      el: h("div", {}, prompt(`Co znaczy „${ex.word}” w tym zdaniu?`), sentence, grid.el),
+      onShow: () => speak(ex.en),
+      check: () => {
+        grid.mark(ex.answer);
+        return { correct: grid.selected === ex.answer, answer: `${ex.word} = ${ex.options[ex.answer]}`, en: ex.en, pl: ex.pl };
+      },
+      cleanup: grid.cleanup,
+    };
+  },
+});

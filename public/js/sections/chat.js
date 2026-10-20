@@ -2,6 +2,8 @@ import { h, sectionHeader, speakBtn, speakPlBtn, slowBtn, toast, levelSelect } f
 import { ROLEPLAYS } from "../data/content.js";
 import { GRAMMAR } from "../data/grammar.js";
 import { findTopic } from "../data/topics.js";
+import { findCategory, categoryContent } from "../data/thematic.js";
+import { POLYSEMY } from "../data/polysemy.js";
 import { videoMeta } from "../data/lessonVideos.js";
 import { roosterSvg } from "../avatar.js";
 import { speak, speakPl, stopSpeaking, listen, sttAvailable, stopListening } from "../speech.js";
@@ -15,7 +17,16 @@ export function render(root, ctx, params) {
   const grammarTopic = GRAMMAR.find((g) => g.id === params.get("grammar"));
   const topic = findTopic(params.get("topic") || "");
   const videoHit = params.get("video") ? videoMeta(params.get("video"), params.get("lesson") || "", params.get("topic") || "") : null;
-  let scenario = topic
+  const dictCat = findCategory(params.get("cat") || "");
+  const polyEntry = POLYSEMY.find((e) => e.w === params.get("meanings"));
+  const special = dictCat
+    ? { id: `dict-${dictCat.id}`, level: "A2", title: `Słownik: ${dictCat.name}`, emoji: dictCat.emoji, task: `Talk with the learner about "${dictCat.nameEn}". Use and teach vocabulary and phrases from this category, for example: ${categoryContent(dictCat).words.slice(0, 15).map((w) => w.en).join(", ")}. Discuss these questions one at a time: ${dictCat.talk.join(" / ")}` }
+    : polyEntry
+    ? { id: `poly-${polyEntry.w}`, level: polyEntry.level, title: `Znaczenia: ${polyEntry.w}`, emoji: "🔀", task: `Practise the many meanings of "${polyEntry.w}": ${polyEntry.meanings.map((m) => m.split("|")[1]).join("; ")}. Use the word in different meanings in your messages, ask the learner which meaning you used, and ask them to make their own sentences with each meaning. Correct mistakes gently.` }
+    : null;
+  let scenario = special
+    ? special
+    : topic
     ? { id: `topic-${topic.id}`, level: topic.level, title: `Temat: ${topic.title}`, emoji: topic.emoji, task: `Talk with the learner about the topic "${topic.titleEn}". Teach and use this vocabulary: ${topic.words.map((w) => w.en).join(", ")}. Ask interesting questions about the topic, share a fun fact, ask a quiz question from time to time and encourage the learner to give opinions.` }
     : videoHit
     ? { id: `video-${videoHit.video.id}`, level: videoHit.topic.level, title: `Film: ${videoHit.video.title}`, emoji: "🎬", task: `The learner has just watched the YouTube video "${videoHit.video.title}" by ${videoHit.video.channel} (topic: ${videoHit.topic.titleEn}). Ask them to summarise it, ask what they learned and what surprised them, discuss the ideas, and teach useful phrases connected with the topic.` }
@@ -34,7 +45,7 @@ export function render(root, ctx, params) {
   function drawScenarios() {
     const avail = ROLEPLAYS.filter((r) => LEVELS.indexOf(r.level) <= LEVELS.indexOf(level));
     scenarioList.replaceChildren(
-      ...(grammarTopic || topic || videoHit ? [scenarioBtn(scenario)] : []),
+      ...(grammarTopic || topic || videoHit || special ? [scenarioBtn(scenario)] : []),
       ...avail.map((r) => scenarioBtn(r)),
     );
   }

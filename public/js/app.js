@@ -8,6 +8,8 @@ import { api } from "./api.js";
 import { backend } from "./backend.js";
 
 import * as dashboard from "./sections/dashboard.js";
+import * as thematic from "./sections/thematic.js";
+import * as meanings from "./sections/meanings.js";
 import * as course from "./sections/course.js";
 import * as topics from "./sections/topics.js";
 import * as plan from "./sections/plan.js";
@@ -39,6 +41,8 @@ export const SECTIONS = [
   { id: "super-slow", icon: "🐢", title: "Super Slow – 6 kroków", mod: superSlow, group: "Słuchanie" },
   { id: "stories", icon: "📖", title: "Historie", mod: stories, group: "Słuchanie" },
   { id: "films", icon: "🎬", title: "Filmy i seriale", mod: films, group: "Słuchanie" },
+  { id: "thematic", icon: "📚", title: "Słownik tematyczny", mod: thematic, group: "Słownictwo" },
+  { id: "meanings", icon: "🔀", title: "Wiele znaczeń", mod: meanings, group: "Słownictwo" },
   { id: "pictures", icon: "🖼️", title: "Ćwiczenia obrazkowe", mod: pictures, group: "Słownictwo" },
   { id: "review", icon: "🧠", title: "Powtórki (pamięć)", mod: review, group: "Słownictwo" },
   { id: "grammar", icon: "📐", title: "Gramatyka", mod: grammar, group: "Słownictwo" },

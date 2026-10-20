@@ -1351,3 +1351,35 @@ kbd { display: inline-block; min-width: 1.5em; padding: 0 4px; border: 1px solid
     margin: -15px auto -15px;
   }
 }
+
+/* ===== Słownik tematyczny ===== */
+.dict-cat { color: var(--text); display: flex; flex-direction: column; gap: 4px; }
+.dict-cat:hover { text-decoration: none; border-color: var(--primary); }
+.dict-counts { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.dict-counts .pill { font-size: 0.75rem; }
+.dict-results { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+.dict-hit { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 12px; background: var(--surface); border: 1px solid var(--border); flex-wrap: wrap; }
+.dict-emoji { font-size: 1.6rem; }
+.dict-hero { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; flex-wrap: wrap; }
+.dict-hero h1 { margin: 0; }
+.dict-gallery { margin-top: 12px; }
+.talk-list li { margin: 6px 0; }
+
+/* ===== Wiele znaczeń ===== */
+.poly-group { margin-bottom: 18px; }
+.poly-grid { grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); }
+.poly-card { color: var(--text); display: flex; flex-direction: column; gap: 6px; }
+.poly-card:hover { text-decoration: none; border-color: var(--primary); }
+.poly-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.poly-word { font-size: 1.35rem; font-weight: 900; }
+.poly-count { margin-left: auto; font-weight: 800; color: var(--accent); font-size: 0.85rem; }
+.poly-emojis { font-size: 1.4rem; letter-spacing: 2px; }
+.poly-hero { align-items: center; }
+.poly-big { font-size: clamp(2.2rem, 9vw, 3.4rem); font-weight: 900; color: var(--primary); line-height: 1.1; word-break: break-word; }
+.poly-meanings { list-style: none; padding: 0; margin: 0 0 14px; counter-reset: m; }
+.poly-meaning { display: flex; gap: 14px; align-items: flex-start; counter-increment: m; position: relative; }
+.poly-meaning::before { content: counter(m); position: absolute; top: 10px; right: 14px; font-weight: 900; color: var(--muted); }
+.poly-m-emoji { font-size: 2.4rem; line-height: 1; }
+.poly-pl { font-size: 1.15rem; font-weight: 800; margin: 2px 0 4px; }
+.poly-ex { font-style: italic; cursor: pointer; }
+.meaning-sentence mark { background: var(--warn-bg); color: inherit; padding: 0 4px; border-radius: 6px; font-weight: 900; }
